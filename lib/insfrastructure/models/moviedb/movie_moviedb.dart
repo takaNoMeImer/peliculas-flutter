@@ -1,5 +1,6 @@
 // En las peticiones a la API vienen varias propiedades: dates, pages, results...
-// Este modelo es para lo que viene en results. Es decir, para la pelicula como tal. No para toda la peticion
+// Este modelo es para lo que viene en results. Es decir, para la pelicula como tal. No para toda la peticion.
+
 class MovieMovieDB {
   MovieMovieDB({
     required this.adult,
