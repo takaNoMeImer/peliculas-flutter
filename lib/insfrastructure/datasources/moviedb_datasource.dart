@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:peliculas/config/constants/environment.dart';
 import 'package:peliculas/domain/datasources/movie_datasource.dart';
 import 'package:peliculas/domain/entities/movie.dart';
+import 'package:peliculas/insfrastructure/mappers/movie_mapper.dart';
+import 'package:peliculas/insfrastructure/models/moviedb/moviedb_response.dart';
 
 // Esta es la implementacion del Datasource
 class MoviedbDatasource extends MovieDatasource{
@@ -21,7 +23,13 @@ class MoviedbDatasource extends MovieDatasource{
     // Extraer la data. Pero se debe transformar en Movie[]
     final response = await dio.get('/movie/now_playing');
 
-    final List<Movie> movies = [];
+    final movieDbReponse = MovieDbResponse.fromJson(response.data);
+
+    // Aqui es donde brilla el mapper, recibimos un result y lo transforma en Movie. (MÁGICO)
+    final List<Movie> movies = movieDbReponse.results
+    .where((element) => element.posterPath != "no-poster")
+    .map((e) => MovieMapper.movieDbToEntity(e))
+    .toList();
     
     return movies;
   }
