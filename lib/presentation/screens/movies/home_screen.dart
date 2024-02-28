@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:peliculas/config/constants/environment.dart';
 import 'package:peliculas/presentation/providers/movies/movies_providers.dart';
+import 'package:peliculas/presentation/widgets/shared/custom_appbar.dart';
 
 class HomeScreen extends StatelessWidget {
-
   static const name = 'home-screen';
 
   const HomeScreen({super.key});
@@ -15,7 +15,6 @@ class HomeScreen extends StatelessWidget {
       body: _HomeView(),
     );
   }
-
 }
 
 // ConsumerStateful es para poder usar riverpod dentro del Stateful Widget
@@ -28,11 +27,10 @@ class _HomeView extends ConsumerStatefulWidget {
 }
 
 class _HomeViewState extends ConsumerState<_HomeView> {
-
   @override
   void initState() {
     super.initState();
-  
+
     // Debemos acceder a un provider de los creados
     // y a la funcion para tener los datos
     // Si no le pongo el .notifier regresa el estado actual, es decir, el valor actual
@@ -41,19 +39,23 @@ class _HomeViewState extends ConsumerState<_HomeView> {
 
   @override
   Widget build(BuildContext context) {
-
     final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
 
-    if (nowPlayingMovies.isEmpty) return Center(child: CircularProgressIndicator());
-
-    return ListView.builder(
-      itemCount: nowPlayingMovies.length,
-      itemBuilder: (context, index) {
-        final movie = nowPlayingMovies[index];
-        return ListTile(
-          title: Text(movie.title),
-        );
-      },
+    return Column(
+      children: [
+        CustomAppbar(),
+        Expanded(
+          child: ListView.builder(
+            itemCount: nowPlayingMovies.length,
+            itemBuilder: (context, index) {
+              final movie = nowPlayingMovies[index];
+              return ListTile(
+                title: Text(movie.title),
+              );
+            },
+          ),
+        )
+      ],
     );
   }
 }
